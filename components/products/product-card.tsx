@@ -1,15 +1,12 @@
 import {
   Card,
-  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "../ui/card";
 import {
-  ChevronDown,
   ChevronDownIcon,
-  ChevronUp,
   ChevronUpIcon,
   StarIcon,
 } from "lucide-react";

@@ -1,30 +1,8 @@
 import { Calendar, RocketIcon } from "lucide-react";
 import SectionHeader from "../common/section-header";
 import ProductCard from "../products/product-card";
-import { ComboboxEmpty } from "@base-ui/react";
 import EmtpyState from "../common/empty-state";
 
-type RecentlyLaunchedProductsProps = {};
-
-const featuredProducts = [
-  {
-    id: 1,
-    name: "ParityKit",
-    description: "A toolkit for creating parity products",
-    tags: ["SaaS", "Pricing", "Global"],
-    votes: 615,
-    isFeatured: true,
-  },
-
-  {
-    id: 2,
-    name: "Modern Full Stack next.js Course",
-    description: "Learn to build production-ready full stack apps with Next.js",
-    tags: ["Next.js", "Full-Stack", "Course"],
-    votes: 124,
-    isFeatured: false,
-  },
-];
 const recentlyLaunchedProducts = [
   {
     id: 1,
@@ -45,7 +23,7 @@ const recentlyLaunchedProducts = [
   },
 ];
 
-export default function RecentlyLaunchedProducts({}: RecentlyLaunchedProductsProps) {
+export default function RecentlyLaunchedProducts({}) {
   return (
     <section className="py-20">
       <div className="wrapper space-y-12">
