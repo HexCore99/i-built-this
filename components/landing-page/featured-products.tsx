@@ -2,6 +2,7 @@ import { ArrowUpRight, StarIcon } from "lucide-react";
 import SectionHeader from "../common/section-header";
 import { Button } from "../ui/button";
 import ProductCard from "../products/product-card";
+import Link from "next/link";
 
 const featuredProducts = [
   {
@@ -34,9 +35,10 @@ export default function FeaturedProducts({}) {
             description="Top picks from our community this week"
           />
           <Button
+            nativeButton={false}
             variant="outline"
             className="hidden sm:flex"
-            render={<a href="/explore" />}
+            render={<Link href="/explore" />}
           >
             View All
             <ArrowUpRight className="size-4" />

@@ -8,6 +8,7 @@ import {
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import StatsCard from "./stats-card";
+import Link from "next/link";
 
 const LiveBadge = () => {
   return (
@@ -61,9 +62,10 @@ export default function HeroSection() {
 
           <div className="flex flex-col sm:flex-row gap-4 mb-16">
             <Button
+              nativeButton={false}
               size="lg"
               className="text-base px-8 shadow-lg"
-              render={<a href="/submit" />}
+              render={<Link href="/submit" />}
             >
               <SparklesIcon />
               Share Your Project
@@ -72,9 +74,10 @@ export default function HeroSection() {
             <Button
               size="lg"
               variant="secondary"
+              nativeButton={false}
               className="text-base px-8 shadow-lg"
 
-              render={<a href="/explore" />}
+              render={<Link href="/explore" />}
             >
               Explore Projects
               <ArrowRightIcon />
