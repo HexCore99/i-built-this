@@ -1,8 +1,11 @@
 "use server";
 
-import { auth } from "@clerk/nextjs/server";
-import { safeParse } from "zod";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { productSchema } from "./product-validation";
+import { flattenError } from "zod";
+import { db } from "@/db";
+import { products } from "@/db/schema";
+import { z } from "zod";
 
 type FormState = {
   success: boolean;
@@ -16,37 +19,76 @@ export async function addProductAction(
   // console.log(formData);
 
   try {
-    // const { userId } = await auth();
-    // if (!userId) {
-    //   return {
-    //     success: false,
-    //     error: {},
-    //     message: "You must be logged in",
-    //   };
-    // }
+    // get user info
+    const user = await currentUser();
+    const userEmail = user?.emailAddresses[0]?.emailAddress || "anonnymous";
+    const { userId, orgId } = await auth();
 
-    //data
-    const rawFormData = Object.fromEntries(formData.entries());
+    if (!userId) {
+      return {
+        success: false,
+        error: {},
+        message: "You must be logged in",
+      };
+    }
+
+    if (!orgId) {
+      return {
+        success: false,
+        error: {},
+        message: "you must be a member of an organization to submit a product",
+      };
+    }
+
     // validate the data
+    const rawFormData = Object.fromEntries(formData.entries());
     const validatedData = productSchema.safeParse(rawFormData);
 
     if (!validatedData.success) {
-      console.log(validatedData.error.flatten().fieldErrors);
+      const fieldErrors = flattenError(validatedData.error).fieldErrors;
+      console.log(fieldErrors);
+
       return {
         success: false,
-        error: validatedData.error.flatten().fieldErrors,
+        error: fieldErrors,
         message: "Invalid data",
       };
     }
 
-    const data = validatedData.data;
+    // extract validated data
+    const { name, slug, tagline, description, websiteUrl, tags } =
+      validatedData.data;
 
+    const tagsArray = tags ? tags.filter((tag) => typeof tag === "string") : [];
     // create product
-    // const product = await prisma.product.create({
-    //   data: validatedData.data,
-    // });
+    await db.insert(products).values({
+      name,
+      slug,
+      tagline,
+      description,
+      websiteUrl,
+      tags: tagsArray,
+      status: "pending",
+      submittedBy: userEmail,
+      organizationId: orgId,
+      userId,
+    });
+
+    return {
+      success: true,
+      error: {},
+      message: "Product added successfully! It will be reviewed shortly. ",
+    };
   } catch (err) {
     console.log(err);
+
+    if (err instanceof z.ZodError) {
+      return {
+        success: false,
+        error: flattenError(err),
+        message: "validation failed please check your input",
+      };
+    }
 
     return {
       success: false,

@@ -1,6 +1,3 @@
-import { auth } from "@clerk/nextjs";
-import { transform } from "next/dist/build/swc/generated-native";
-import { Princess_Sofia } from "next/font/google";
 import { z } from "zod";
 
 export const productSchema = z.object({

@@ -1,7 +1,13 @@
 "use client";
 import { Loader2Icon, SparkleIcon } from "lucide-react";
 import { Button } from "../ui/button";
-import { Field, FieldDescription, FieldGroup, FieldLabel } from "../ui/field";
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "../ui/field";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { addProductAction } from "@/lib/products/product-actions";
@@ -11,14 +17,14 @@ import { FormState } from "@base-ui/react";
 const initialState = {
   success: false,
   error: {},
-  message: "",
+  message: "this is initial state",
 };
 export default function ProductSubmitForm({}) {
-  const [state, formAction, isPending] = useActionState<FormState>(
+  const [state, formAction, isPending] = useActionState(
     addProductAction,
     initialState,
   );
-
+  const { success, error, message } = state;
   return (
     <form className="space-y-6" action={formAction}>
       <FieldGroup className="mb-12">
@@ -31,6 +37,7 @@ export default function ProductSubmitForm({}) {
             required
             onChange={() => {}}
           />
+          <FieldError>{error?.name}</FieldError>
         </Field>
 
         <Field>
@@ -45,6 +52,8 @@ export default function ProductSubmitForm({}) {
           <FieldDescription>
             URL-friendly version of the product name
           </FieldDescription>
+
+          <FieldError>{error?.slug}</FieldError>
         </Field>
 
         <Field>
@@ -56,6 +65,8 @@ export default function ProductSubmitForm({}) {
             required
             onChange={() => {}}
           />
+
+          <FieldError>{error?.tagline}</FieldError>
         </Field>
 
         <Field>
@@ -67,6 +78,8 @@ export default function ProductSubmitForm({}) {
             required
             onChange={() => {}}
           />
+
+          <FieldError>{error?.description}</FieldError>
         </Field>
 
         <Field>
@@ -81,6 +94,8 @@ export default function ProductSubmitForm({}) {
           <FieldDescription>
             Enter your product&apos;s website URL
           </FieldDescription>
+
+          <FieldError>{error?.websiteUrl}</FieldError>
         </Field>
 
         <Field>
@@ -95,6 +110,8 @@ export default function ProductSubmitForm({}) {
           <FieldDescription>
             Comma-separated list of tags (e.g. AI,SaaS,Productivity)
           </FieldDescription>
+
+          <FieldError>{error?.tags}</FieldError>
         </Field>
       </FieldGroup>
 
