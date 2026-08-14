@@ -13,20 +13,21 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
-// export default function ProductPage({
-//   params,
-// }: {
-//   params: Promise<{ id: string }>;
-// }) {
-//   return (
-//     <Suspense fallback={<div>Loading...</div>}>
-//       <ProductContent params={params} />
-//     </Suspense>
-//   );
-// }
+export default function ProductPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  return (
+    <Suspense fallback={<div className="wrapper py-16">Loading product...</div>}>
+      <ProductContent params={params} />
+    </Suspense>
+  );
+}
 
-export default async function ProductPage({
+async function ProductContent({
   params,
 }: {
   params: Promise<{ slug: string }>;
@@ -34,9 +35,9 @@ export default async function ProductPage({
   const { slug } = await params;
   const product = await getProductBySlug(slug);
 
-  // if (!product) {
-  //   notFound();
-  // }
+  if (!product) {
+    notFound();
+  }
 
   const { name, description, websiteUrl, tags, voteCount, tagline } = product;
   return (

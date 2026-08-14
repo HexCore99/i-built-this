@@ -8,16 +8,12 @@ import { products } from "@/db/schema";
 import { z } from "zod";
 import { eq, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import type { FormState } from "@/types";
 
-type FormState = {
-  success: boolean;
-  error?: Record<string, string[]>;
-  message: string;
-};
 export async function addProductAction(
   prevState: FormState,
   formData: FormData,
-) {
+): Promise<FormState> {
   // console.log(formData);
 
   try {
@@ -87,14 +83,14 @@ export async function addProductAction(
     if (err instanceof z.ZodError) {
       return {
         success: false,
-        error: flattenError(err),
+        error: flattenError(err).fieldErrors,
         message: "validation failed please check your input",
       };
     }
 
     return {
       success: false,
-      error: { err },
+      error: {},
       message: "Something went wrong",
     };
   }

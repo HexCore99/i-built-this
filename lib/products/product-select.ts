@@ -15,6 +15,7 @@ export async function getFeaturedProducts() {
 }
 
 export async function getAllProducts() {
+  "use cache";
   const productsData = await db
     .select()
     .from(products)
@@ -23,6 +24,8 @@ export async function getAllProducts() {
 }
 
 export async function getApprovedProducts() {
+
+  "use cache";
   const productsData = await db
     .select()
     .from(products)
@@ -32,6 +35,7 @@ export async function getApprovedProducts() {
 }
 
 export async function getRecentlyLaunchedProducts() {
+
   await connection();
   const productsData = await getApprovedProducts();
   const oneWeekAgo = new Date();

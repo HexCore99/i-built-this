@@ -13,8 +13,9 @@ import { Textarea } from "../ui/textarea";
 import { addProductAction } from "@/lib/products/product-actions";
 import { useActionState } from "react";
 import { cn } from "@/lib/utils";
+import type { FormState } from "@/types";
 
-const initialState = {
+const initialState: FormState = {
   success: false,
   error: {},
   message: "",
