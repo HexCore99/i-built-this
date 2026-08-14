@@ -13,6 +13,7 @@ export default clerkMiddleware(async (auth) => {
         await client.users.getOrganizationMembershipList({ userId: userId });
 
       if (organizations && organizations.length > 0) {
+        //TODO: if the user has organizations but not selected what to do then?
         return NextResponse.next();
       }
 

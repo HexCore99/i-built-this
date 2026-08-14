@@ -12,12 +12,12 @@ import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { addProductAction } from "@/lib/products/product-actions";
 import { useActionState } from "react";
-import { FormState } from "@base-ui/react";
+import { cn } from "@/lib/utils";
 
 const initialState = {
   success: false,
   error: {},
-  message: "this is initial state",
+  message: "",
 };
 export default function ProductSubmitForm({}) {
   const [state, formAction, isPending] = useActionState(
@@ -27,6 +27,20 @@ export default function ProductSubmitForm({}) {
   const { success, error, message } = state;
   return (
     <form className="space-y-6" action={formAction}>
+      {message && (
+        <div
+          className={cn(
+            "p-4 rounded-lg border",
+            success
+              ? "bg-primary/10 border-primary text-primary"
+              : " border-destructive/10 text-destructive",
+          )}
+          role="alert"
+          aria-live="polite"
+        >
+          {message}
+        </div>
+      )}
       <FieldGroup className="mb-12">
         <Field>
           <FieldLabel htmlFor="name">Prodcut Name</FieldLabel>
