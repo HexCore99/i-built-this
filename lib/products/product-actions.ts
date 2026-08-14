@@ -6,6 +6,8 @@ import { flattenError } from "zod";
 import { db } from "@/db";
 import { products } from "@/db/schema";
 import { z } from "zod";
+import { eq, sql } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 
 type FormState = {
   success: boolean;
@@ -96,4 +98,101 @@ export async function addProductAction(
       message: "Something went wrong",
     };
   }
+}
+
+export async function upvoteProductAction(productId: number) {
+  try {
+    const { userId, orgId } = await auth();
+
+    // User authentication
+
+    if (!userId) {
+      return {
+        success: false,
+        error: {},
+        message: "You must be logged in",
+      };
+    }
+
+    if (!orgId) {
+      return {
+        success: false,
+        error: {},
+        message: "you must be a member of an organization to submit a product",
+      };
+    }
+    // update vote
+    await db
+      .update(products)
+      .set({ voteCount: sql`GREATEST(0,vote_count+1)` })
+      .where(eq(products.id, productId));
+
+    // TODO: revalidatePath is too mcuh slower, isn't there faster way?
+    revalidatePath("/"); //refresh the cache
+
+    return {
+      success: true,
+      message: "product upvoted successful",
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      error: { error },
+      message: "failed to upvote product",
+      voteCount: 0,
+    };
+  }
+}
+
+export async function downVoteProductAction(productId: number) {
+  try {
+    const { userId, orgId } = await auth();
+
+    // User authentication
+
+    if (!userId) {
+      return {
+        success: false,
+        error: {},
+        message: "You must be logged in",
+      };
+    }
+
+    if (!orgId) {
+      return {
+        success: false,
+        error: {},
+        message: "you must be a member of an organization to submit a product",
+      };
+    }
+    // update vote
+    await db
+      .update(products)
+      .set({ voteCount: sql`GREATEST(0,vote_count-1)` })
+      .where(eq(products.id, productId));
+
+    revalidatePath("/"); //refresh the cache
+
+    return {
+      success: true,
+      message: "product downvoted successful",
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      error: { error },
+      message: "failed to downvote product",
+      voteCount: 0,
+    };
+  }
+}
+
+export async function getProductBySlug(slug: string) {
+  const product = await db
+    .select()
+    .from(products)
+    .where(eq(products.slug, slug));
+  return product[0] ?? null;
 }

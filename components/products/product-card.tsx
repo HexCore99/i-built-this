@@ -12,6 +12,7 @@ import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { InferSelectModel } from "drizzle-orm";
 import { products } from "@/db/schema";
+import VotingButtons from "./voting-buttons";
 
 type Product = InferSelectModel<typeof products>;
 type ProductCardProps = {
@@ -21,7 +22,7 @@ type ProductCardProps = {
 export default function ProductCard({ product }: ProductCardProps) {
   const hasVoted = false;
   return (
-    <Link href={`/products/${product.id}`} className="h-full">
+    <Link href={`/products/${product.slug}`} className="h-full">
       <Card className="group card-hover hover:bg-primary-foreground/10 border-solid border-gray-400 min-h-55">
         <CardHeader className="flex-1">
           <div className="flex items-start gap-4">
@@ -42,36 +43,11 @@ export default function ProductCard({ product }: ProductCardProps) {
               </CardDescription>
             </div>
             {/*voting buttons*/}
-            <div className="flex flex-col iterms-center gap-1 shrink-0">
-              <Button
-                variant="ghost"
-                size="icon-sm"
-                className={cn(
-                  "h-8 w-8 text-primary ",
-                  hasVoted
-                    ? "bg-primary/10 text-primary hover:bg-primary/20"
-                    : "hover:bg-primary/10 hover:text-primary",
-                )}
-              >
-                <ChevronUpIcon className="size-5" />
-              </Button>
-              <span className="text-sm font-semibold transition-colors text-foreground">
-                {product.voteCount}
-              </span>
-
-              <Button
-                variant="ghost"
-                size="icon-sm"
-                className={cn(
-                  "h-8 w-8 text-primary",
-                  hasVoted
-                    ? "hover:text-destructive"
-                    : "opacity-50 cursor-not-allowed",
-                )}
-              >
-                <ChevronDownIcon className="size-5" />
-              </Button>
-            </div>
+            <VotingButtons
+              productId={product.id}
+              hasVoted={hasVoted}
+              voteCount={product.voteCount}
+            />
           </div>
         </CardHeader>
         <CardFooter className="border-t-0 bg-transparent">

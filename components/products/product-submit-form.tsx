@@ -54,6 +54,7 @@ export default function ProductSubmitForm({}) {
           <FieldError>{error?.name}</FieldError>
         </Field>
 
+        {/*TODO: What if the user submits a slug that already exists?*/}
         <Field>
           <FieldLabel htmlFor="slug">Slug</FieldLabel>
           <Input
