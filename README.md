@@ -179,6 +179,14 @@ lib/
 proxy.ts                 Clerk middleware and organization provisioning
 ```
 
+## Course credit and acknowledgements
+
+This project was created as a learning project by following this [full-stack Next.js course on YouTube](https://youtu.be/tI_Nt32_4wM).
+
+My sincere thanks and appreciation go to the course creator and channel owner for sharing the knowledge, guidance, and step-by-step instruction that made this project possible. The course provided the foundation for understanding and building the application, while this repository reflects my own implementation, practice, debugging, and continued improvements.
+
+Please visit the course, support the creator, and explore the channel for more educational content.
+
 ## Production
 
 Create and serve an optimized build with:
