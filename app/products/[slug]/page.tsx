@@ -122,6 +122,7 @@ export default async function ProductPage({
               </div>
               {websiteUrl && (
                 <Button
+                  nativeButton={false}
                   className="w-full rounded-lg"
                   variant="outline"
                   render={

@@ -10,13 +10,12 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
-import { InferSelectModel } from "drizzle-orm";
 import { products } from "@/db/schema";
 import VotingButtons from "./voting-buttons";
+import { ProductType } from "@/types";
 
-type Product = InferSelectModel<typeof products>;
 type ProductCardProps = {
-  product: Product;
+  product: ProductType;
 };
 
 export default function ProductCard({ product }: ProductCardProps) {
