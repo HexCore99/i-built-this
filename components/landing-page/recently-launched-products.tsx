@@ -2,10 +2,21 @@ import { Calendar, RocketIcon } from "lucide-react";
 import SectionHeader from "../common/section-header";
 import ProductCard from "../products/product-card";
 import EmtpyState from "../common/empty-state";
-import { getRecentlyLaunchedProducts } from "@/lib/products/product-select";
+import {
+  getRecentlyLaunchedProducts,
+  getVoteInformation,
+} from "@/lib/products/product-select";
+import { auth } from "@clerk/nextjs/server";
 
 export default async function RecentlyLaunchedProducts({}) {
   const recentlyLaunchedProducts = await getRecentlyLaunchedProducts();
+  const productIds = recentlyLaunchedProducts.map((product) => product.id);
+
+  const { userId } = await auth();
+  let voteInformation = undefined;
+  if (userId) {
+    voteInformation = await getVoteInformation(userId, productIds);
+  }
   return (
     <section className="py-20">
       <div className="wrapper space-y-12">
@@ -17,9 +28,20 @@ export default async function RecentlyLaunchedProducts({}) {
 
         {recentlyLaunchedProducts.length > 0 ? (
           <div className="grid-wrapper">
-            {recentlyLaunchedProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
+            {recentlyLaunchedProducts.map((product) => {
+              const userVoteInfo = voteInformation?.find(
+                (vote) => vote.productId === product.id,
+              );
+
+              return (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  userVoteInfo={userVoteInfo}
+                  userId={userId}
+                />
+              );
+            })}
           </div>
         ) : (
           <EmtpyState
