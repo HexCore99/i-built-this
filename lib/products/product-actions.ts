@@ -4,22 +4,19 @@ import { auth, currentUser } from "@clerk/nextjs/server";
 import { productSchema } from "./product-validation";
 import { flattenError } from "zod";
 import { db } from "@/db";
-import { products } from "@/db/schema";
+import { products, votes } from "@/db/schema";
 import { z } from "zod";
-import { eq, sql } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import type { FormState } from "@/types";
+import { updateProductVoteCount } from "./vote-utils";
 
 export async function addProductAction(
   prevState: FormState,
   formData: FormData,
 ): Promise<FormState> {
-  // console.log(formData);
-
   try {
     // get user info
-    const user = await currentUser();
-    const userEmail = user?.emailAddresses[0]?.emailAddress || "anonnymous";
     const { userId, orgId } = await auth();
 
     if (!userId) {
@@ -37,6 +34,16 @@ export async function addProductAction(
         message: "you must be a member of an organization to submit a product",
       };
     }
+
+    const user = await currentUser();
+    const displayName = [user?.firstName, user?.lastName]
+      .filter(Boolean)
+      .join(" ");
+    const submittedBy =
+      displayName ||
+      user?.primaryEmailAddress?.emailAddress ||
+      user?.emailAddresses[0]?.emailAddress ||
+      "Unknown user";
 
     // validate the data
     const rawFormData = Object.fromEntries(formData.entries());
@@ -67,7 +74,7 @@ export async function addProductAction(
       websiteUrl,
       tags: tagsArray,
       status: "pending",
-      submittedBy: userEmail,
+      submittedBy,
       organizationId: orgId,
       userId,
     });
@@ -98,7 +105,7 @@ export async function addProductAction(
 
 export async function upvoteProductAction(productId: number) {
   try {
-    const { userId, orgId } = await auth();
+    const { userId } = await auth();
 
     // User authentication
 
@@ -110,18 +117,46 @@ export async function upvoteProductAction(productId: number) {
       };
     }
 
-    if (!orgId) {
-      return {
-        success: false,
-        error: {},
-        message: "you must be a member of an organization to submit a product",
-      };
+    /* =====> Voting Logic <====== */
+
+    // check if the user already voted for this product
+    const [userVote] = await db
+      .select()
+      .from(votes)
+      .where(and(eq(votes.productId, productId), eq(votes.userId, userId)))
+      .limit(1);
+
+    switch (userVote?.voteType) {
+      case undefined:
+        await db.insert(votes).values({
+          userId,
+          productId,
+          voteType: "UPVOTE",
+        });
+        await updateProductVoteCount(productId, +1);
+        break;
+
+      case "UPVOTE":
+        // delete user row from votes and decrement vote_count by 1
+        await db
+          .delete(votes)
+          .where(and(eq(votes.userId, userId), eq(votes.productId, productId)));
+
+        await updateProductVoteCount(productId, -1);
+        break;
+
+      case "DOWNVOTE":
+        await db
+          .update(votes)
+          .set({ voteType: "UPVOTE" })
+          .where(and(eq(votes.userId, userId), eq(votes.productId, productId)));
+        await updateProductVoteCount(productId, 2);
+        break;
+      default:
+        throw new Error("Invalid vote type");
     }
-    // update vote
-    await db
-      .update(products)
-      .set({ voteCount: sql`GREATEST(0,vote_count+1)` })
-      .where(eq(products.id, productId));
+
+    /* =====> END Voting Logic <====== */
 
     // TODO: revalidatePath is too mcuh slower, isn't there faster way?
     revalidatePath("/"); //refresh the cache
@@ -143,7 +178,7 @@ export async function upvoteProductAction(productId: number) {
 
 export async function downVoteProductAction(productId: number) {
   try {
-    const { userId, orgId } = await auth();
+    const { userId } = await auth();
 
     // User authentication
 
@@ -155,20 +190,46 @@ export async function downVoteProductAction(productId: number) {
       };
     }
 
-    if (!orgId) {
-      return {
-        success: false,
-        error: {},
-        message: "you must be a member of an organization to submit a product",
-      };
-    }
-    // update vote
-    await db
-      .update(products)
-      .set({ voteCount: sql`GREATEST(0,vote_count-1)` })
-      .where(eq(products.id, productId));
+    /* =====> Voting Logic <====== */
 
-    revalidatePath("/"); //refresh the cache
+    // check if the user already voted for this product
+    const [userVote] = await db
+      .select()
+      .from(votes)
+      .where(and(eq(votes.productId, productId), eq(votes.userId, userId)))
+      .limit(1);
+
+    switch (userVote?.voteType) {
+      case undefined:
+        await db.insert(votes).values({
+          userId,
+          productId,
+          voteType: "DOWNVOTE",
+        });
+        await updateProductVoteCount(productId, -1);
+        break;
+
+      case "DOWNVOTE":
+        // delete user row from votes and decrement vote_count by 1
+        await db
+          .delete(votes)
+          .where(and(eq(votes.userId, userId), eq(votes.productId, productId)));
+
+        await updateProductVoteCount(productId, 1);
+        break;
+
+      case "UPVOTE":
+        await db
+          .update(votes)
+          .set({ voteType: "DOWNVOTE" })
+          .where(and(eq(votes.userId, userId), eq(votes.productId, productId)));
+        await updateProductVoteCount(productId, -2);
+        break;
+      default:
+        throw new Error("Invalid vote type");
+    }
+    revalidatePath("/");
+    /* =====> END Voting Logic <====== */
 
     return {
       success: true,

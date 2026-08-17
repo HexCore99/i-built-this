@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { products } from "@/db/schema";
+import { products, votes } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
 import { connection } from "next/server";
 import { resolve } from "node:dns";
@@ -24,7 +24,6 @@ export async function getAllProducts() {
 }
 
 export async function getApprovedProducts() {
-
   "use cache";
   const productsData = await db
     .select()
@@ -35,17 +34,24 @@ export async function getApprovedProducts() {
 }
 
 export async function getRecentlyLaunchedProducts() {
-
   await connection();
   const productsData = await getApprovedProducts();
   const oneWeekAgo = new Date();
   oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-
-  await new Promise((resolve) => setTimeout(resolve, 3000));
 
   return productsData.filter(
     (product) =>
       product.createdAt &&
       new Date(product.createdAt.toISOString()) >= oneWeekAgo,
   );
+}
+
+export async function getVoteInformation(userId: string) {
+  // await connection(); //TODO: do i need connection here?
+  const voteInformation = db
+    .select()
+    .from(votes)
+    .where(eq(votes.userId, userId));
+
+  return voteInformation;
 }

@@ -1,0 +1,1 @@
+ALTER TABLE "products" ALTER COLUMN "tags" SET DEFAULT '{}'::varchar(255)[];

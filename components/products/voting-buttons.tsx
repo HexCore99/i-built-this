@@ -7,34 +7,59 @@ import {
   upvoteProductAction,
 } from "@/lib/products/product-actions";
 import { useOptimistic, useTransition } from "react";
-import { set } from "zod/v3";
-
+import { VoteInformation } from "@/types";
 export default function VotingButtons({
   productId,
+  userVoteInfo,
   voteCount: initialVoteCount,
-  hasVoted,
+  userId,
 }: {
-  hasVoted?: boolean;
+  userVoteInfo?: VoteInformation;
   productId: number;
   voteCount: number;
+  userId: string | null;
 }) {
   const [optimisticVoteCount, setOptimisticVoteCount] = useOptimistic(
     initialVoteCount,
-    (currentVoteCount, change: number) =>
-      Math.max(0, currentVoteCount + change),
+    (currentVoteCount, change: number) => currentVoteCount + change,
   );
 
   const [isPending, startTransition] = useTransition();
   async function handleUpvote() {
     startTransition(async () => {
-      setOptimisticVoteCount(1);
+      switch (userVoteInfo?.voteType) {
+        case undefined:
+          setOptimisticVoteCount(1);
+          break;
+        case "UPVOTE":
+          setOptimisticVoteCount(-1);
+          break;
+        case "DOWNVOTE":
+          setOptimisticVoteCount(+2);
+          break;
+        default:
+          throw new Error("Invalid vote type");
+      }
       await upvoteProductAction(productId);
     });
   }
 
   async function handleDownvote() {
     startTransition(async () => {
-      setOptimisticVoteCount(-1);
+      switch (userVoteInfo?.voteType) {
+        case undefined:
+          setOptimisticVoteCount(-1);
+          break;
+        case "DOWNVOTE":
+          setOptimisticVoteCount(1);
+          break;
+        case "UPVOTE":
+          setOptimisticVoteCount(-2);
+          break;
+        default:
+          throw new Error("Invalid vote type");
+      }
+
       await downVoteProductAction(productId);
     });
   }
@@ -51,10 +76,10 @@ export default function VotingButtons({
         onClick={handleUpvote}
         variant="ghost"
         size="icon-sm"
-        disabled={isPending}
+        disabled={isPending || userId === null}
         className={cn(
           "h-8 w-8 text-primary ",
-          hasVoted
+          userVoteInfo?.voteType === "UPVOTE"
             ? "bg-primary/10 text-primary hover:bg-primary/20"
             : "hover:bg-primary/10 hover:text-primary",
         )}
@@ -69,10 +94,13 @@ export default function VotingButtons({
         onClick={handleDownvote}
         variant="ghost"
         size="icon-sm"
-        disabled={isPending}
+        disabled={isPending || userId === null}
         className={cn(
           "h-8 w-8 text-primary",
-          hasVoted ? "hover:text-destructive" : "opacity-50 cursor-not-allowed",
+
+          userVoteInfo?.voteType === "DOWNVOTE"
+            ? "bg-primary/10 text-primary hover:bg-primary/20"
+            : "hover:bg-primary/10 hover:text-primary",
         )}
       >
         <ChevronDownIcon className="size-5" />

@@ -5,20 +5,24 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { ChevronDownIcon, ChevronUpIcon, StarIcon } from "lucide-react";
+import { StarIcon } from "lucide-react";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
-import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
-import { products } from "@/db/schema";
 import VotingButtons from "./voting-buttons";
-import { ProductType } from "@/types";
+import { ProductType, VoteInformation } from "@/types";
 
 type ProductCardProps = {
   product: ProductType;
+  userVoteInfo?: VoteInformation;
+  userId: string | null;
 };
 
-export default function ProductCard({ product }: ProductCardProps) {
+export default function ProductCard({
+  product,
+  userVoteInfo,
+  userId,
+}: ProductCardProps) {
+  // TODO: no hasVoted button is in database.
   const hasVoted = false;
   return (
     <Link href={`/products/${product.slug}`} className="h-full">
@@ -30,7 +34,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 <CardTitle className="text-lg group-hover:text-primary transition-colors">
                   {product.name}
                 </CardTitle>
-                {product.voteCount > 100 && (
+                {product.voteCount > minVoteCntForFeature && (
                   <Badge className="gap-1 bg-primary  text-primary-foreground">
                     <StarIcon className="size-3 fill-current" />
                     Featured
@@ -44,8 +48,9 @@ export default function ProductCard({ product }: ProductCardProps) {
             {/*voting buttons*/}
             <VotingButtons
               productId={product.id}
-              hasVoted={hasVoted}
+              userVoteInfo={userVoteInfo}
               voteCount={product.voteCount}
+              userId={userId}
             />
           </div>
         </CardHeader>
@@ -62,3 +67,5 @@ export default function ProductCard({ product }: ProductCardProps) {
     </Link>
   );
 }
+
+const minVoteCntForFeature = 100;

@@ -50,7 +50,6 @@ export default function ProductSubmitForm({}) {
             name="name"
             placeholder="My Awesome Product"
             required
-            onChange={() => {}}
           />
           <FieldError>{error?.name}</FieldError>
         </Field>
@@ -63,7 +62,6 @@ export default function ProductSubmitForm({}) {
             name="slug"
             placeholder="my-awesome-product"
             required
-            onChange={() => {}}
           />
           <FieldDescription>
             URL-friendly version of the product name
@@ -79,7 +77,6 @@ export default function ProductSubmitForm({}) {
             name="tagline"
             placeholder="A brief, Catchy description"
             required
-            onChange={() => {}}
           />
 
           <FieldError>{error?.tagline}</FieldError>
@@ -92,20 +89,18 @@ export default function ProductSubmitForm({}) {
             name="description"
             placeholder="Tell us more about your product..."
             required
-            onChange={() => {}}
           />
 
           <FieldError>{error?.description}</FieldError>
         </Field>
 
         <Field>
-          <FieldLabel htmlFor="website">Website Url</FieldLabel>
+          <FieldLabel htmlFor="websiteUrl">Website Url</FieldLabel>
           <Input
             id="websiteUrl"
             name="websiteUrl"
             placeholder="https://yourproduct.com"
             required
-            onChange={() => {}}
           />
           <FieldDescription>
             Enter your product&apos;s website URL
@@ -121,7 +116,6 @@ export default function ProductSubmitForm({}) {
             name="tags"
             placeholder="AI,SaaS,Productivity"
             required
-            onChange={() => {}}
           />
           <FieldDescription>
             Comma-separated list of tags (e.g. AI,SaaS,Productivity)

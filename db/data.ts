@@ -1,4 +1,3 @@
-// All products data - matches schema.ts structure
 export const allProducts = [
   {
     id: 1,
@@ -9,12 +8,15 @@ export const allProducts = [
       "Learn to build modern full stack applications with Next.js 16.",
     websiteUrl: "https://nextjscourse.dev",
     tags: ["Next.js", "Tailwind CSS", "Full Stack"],
-    createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
+    createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
     approvedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
-    status: "approved" as const,
-    submittedBy: "john@example.com",
+    status: "approved",
+    submittedBy: "John Doe",
+    userId: "user_seed_demo",
+    organizationId: "org_seed_demo",
     voteCount: 120,
   },
+
   {
     id: 2,
     name: "TaskFlow Pro",
@@ -26,10 +28,13 @@ export const allProducts = [
     tags: ["Productivity", "SaaS"],
     createdAt: new Date("2024-01-18"),
     approvedAt: new Date("2024-01-19"),
-    status: "approved" as const,
-    submittedBy: "mike@example.com",
+    status: "approved",
+    submittedBy: "Mike Ross",
+    userId: "user_seed_demo",
+    organizationId: "org_seed_demo",
     voteCount: 87,
   },
+
   {
     id: 3,
     name: "CodeSnap",
@@ -41,10 +46,13 @@ export const allProducts = [
     tags: ["Developer Tools", "Design"],
     createdAt: new Date("2024-01-20"),
     approvedAt: new Date("2024-01-21"),
-    status: "approved" as const,
-    submittedBy: "alex@example.com",
+    status: "approved",
+    submittedBy: "Alex Morgan",
+    userId: "user_seed_demo",
+    organizationId: "org_seed_demo",
     voteCount: 56,
   },
+
   {
     id: 4,
     name: "ProofyBubble",
@@ -54,12 +62,15 @@ export const allProducts = [
       "Boost your website conversions with real-time social proof notifications. Show recent purchases, sign-ups, and user activity to build trust and credibility.",
     websiteUrl: "https://proofybubble.com",
     tags: ["Marketing", "SaaS", "Conversion"],
-    createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
+    createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
     approvedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
-    status: "approved" as const,
-    submittedBy: "proofy@example.com",
+    status: "approved",
+    submittedBy: "Proofy Team",
+    userId: "user_seed_demo",
+    organizationId: "org_seed_demo",
     voteCount: 523,
   },
+
   {
     id: 5,
     name: "ParityKit",
@@ -69,12 +80,15 @@ export const allProducts = [
       "Maximize your global revenue with intelligent price localization. Automatically adjust pricing based on purchasing power parity to increase conversions worldwide.",
     websiteUrl: "https://paritykit.com",
     tags: ["SaaS", "Pricing", "Global"],
-    createdAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000), // 4 days ago
+    createdAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
     approvedAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
-    status: "approved" as const,
-    submittedBy: "parity@example.com",
+    status: "approved",
+    submittedBy: "ParityKit Team",
+    userId: "user_seed_demo",
+    organizationId: "org_seed_demo",
     voteCount: 612,
   },
+
   {
     id: 6,
     name: "DataViz Pro",
@@ -86,10 +100,13 @@ export const allProducts = [
     tags: ["Analytics", "Design", "SaaS"],
     createdAt: new Date("2024-01-28"),
     approvedAt: new Date("2024-01-29"),
-    status: "approved" as const,
-    submittedBy: "data@example.com",
+    status: "approved",
+    submittedBy: "DataViz Team",
+    userId: "user_seed_demo",
+    organizationId: "org_seed_demo",
     voteCount: 234,
   },
+
   {
     id: 7,
     name: "EmailCraft",
@@ -99,12 +116,15 @@ export const allProducts = [
       "Design, send, and track beautiful email campaigns with our intuitive drag-and-drop editor and powerful automation tools.",
     websiteUrl: "https://emailcraft.example.com",
     tags: ["Marketing", "Email", "SaaS"],
-    createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
+    createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
     approvedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
-    status: "approved" as const,
-    submittedBy: "email@example.com",
+    status: "approved",
+    submittedBy: "EmailCraft Team",
+    userId: "user_seed_demo",
+    organizationId: "org_seed_demo",
     voteCount: 378,
   },
+
   {
     id: 8,
     name: "APIHub",
@@ -114,12 +134,15 @@ export const allProducts = [
       "Centralized API management platform with real-time monitoring, documentation, and testing tools. Keep all your APIs organized and secure.",
     websiteUrl: "https://apihub.example.com",
     tags: ["Developer Tools", "API", "Infrastructure"],
-    createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
+    createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
     approvedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
-    status: "approved" as const,
-    submittedBy: "api@example.com",
+    status: "approved",
+    submittedBy: "APIHub Team",
+    userId: "user_seed_demo",
+    organizationId: "org_seed_demo",
     voteCount: 445,
   },
+
   {
     id: 9,
     name: "Developer to Leader Course",
@@ -131,8 +154,10 @@ export const allProducts = [
     tags: ["Leadership", "Management", "Development"],
     createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
     approvedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
-    status: "pending" as const,
-    submittedBy: "kulkarni.ankita09@gmail.com",
+    status: "pending",
+    submittedBy: "Ankita Kulkarni",
+    userId: "user_seed_demo",
+    organizationId: "org_seed_demo",
     voteCount: 340,
   },
 ];

@@ -1,14 +1,20 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "deb0ea50-23af-4015-8fc1-02cfd8f54f45",
+  "id": "df618d6f-9544-46c0-9cbd-e865416aa4a5",
   "prevIds": [
-    "00000000-0000-0000-0000-000000000000"
+    "ea4aa0a5-a6c7-42d7-b853-d0813ce703c4"
   ],
   "ddl": [
     {
       "isRlsEnabled": false,
       "name": "products",
+      "entityType": "tables",
+      "schema": "public"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "votes",
       "entityType": "tables",
       "schema": "public"
     },
@@ -26,7 +32,7 @@
       "table": "products"
     },
     {
-      "type": "varchar(120)",
+      "type": "varchar(255)",
       "typeSchema": null,
       "notNull": true,
       "dimensions": 0,
@@ -39,7 +45,7 @@
       "table": "products"
     },
     {
-      "type": "varchar(140)",
+      "type": "varchar(255)",
       "typeSchema": null,
       "notNull": true,
       "dimensions": 0,
@@ -52,7 +58,7 @@
       "table": "products"
     },
     {
-      "type": "varchar(200)",
+      "type": "varchar(255)",
       "typeSchema": null,
       "notNull": false,
       "dimensions": 0,
@@ -78,7 +84,7 @@
       "table": "products"
     },
     {
-      "type": "text",
+      "type": "varchar(500)",
       "typeSchema": null,
       "notNull": false,
       "dimensions": 0,
@@ -91,10 +97,36 @@
       "table": "products"
     },
     {
-      "type": "json",
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "products"
+    },
+    {
+      "type": "timestamp",
       "typeSchema": null,
       "notNull": false,
       "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "approved_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "products"
+    },
+    {
+      "type": "varchar",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 1,
       "default": null,
       "generated": null,
       "identity": null,
@@ -117,35 +149,9 @@
       "table": "products"
     },
     {
-      "type": "timestamp with time zone",
+      "type": "varchar(50)",
       "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "products"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "approved_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "products"
-    },
-    {
-      "type": "varchar(20)",
-      "typeSchema": null,
-      "notNull": false,
+      "notNull": true,
       "dimensions": 0,
       "default": "'pending'",
       "generated": null,
@@ -156,11 +162,11 @@
       "table": "products"
     },
     {
-      "type": "varchar(120)",
+      "type": "varchar(255)",
       "typeSchema": null,
-      "notNull": false,
+      "notNull": true,
       "dimensions": 0,
-      "default": "'anonymous'",
+      "default": null,
       "generated": null,
       "identity": null,
       "name": "submitted_by",
@@ -171,7 +177,7 @@
     {
       "type": "varchar(255)",
       "typeSchema": null,
-      "notNull": false,
+      "notNull": true,
       "dimensions": 0,
       "default": null,
       "generated": null,
@@ -184,7 +190,7 @@
     {
       "type": "varchar(255)",
       "typeSchema": null,
-      "notNull": false,
+      "notNull": true,
       "dimensions": 0,
       "default": null,
       "generated": null,
@@ -195,10 +201,82 @@
       "table": "products"
     },
     {
+      "type": "serial",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "votes"
+    },
+    {
+      "type": "varchar(255)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "user_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "votes"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "product_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "votes"
+    },
+    {
+      "type": "varchar(10)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "vote_type",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "votes"
+    },
+    {
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "votes"
+    },
+    {
       "nameExplicit": true,
       "columns": [
         {
-          "value": "slug",
+          "value": "user_id",
+          "isExpression": false,
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null
+        },
+        {
+          "value": "product_id",
           "isExpression": false,
           "asc": true,
           "nullsFirst": false,
@@ -210,52 +288,27 @@
       "with": "",
       "method": "btree",
       "concurrently": false,
-      "name": "products_slug_idx",
+      "name": "unique_user_product_vote",
       "entityType": "indexes",
       "schema": "public",
-      "table": "products"
+      "table": "votes"
     },
     {
-      "nameExplicit": true,
+      "nameExplicit": false,
       "columns": [
-        {
-          "value": "status",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
+        "product_id"
       ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "products_status_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "products"
-    },
-    {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "organization_id",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
+      "schemaTo": "public",
+      "tableTo": "products",
+      "columnsTo": [
+        "id"
       ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "products_organization_idx",
-      "entityType": "indexes",
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "name": "votes_product_id_products_id_fkey",
+      "entityType": "fks",
       "schema": "public",
-      "table": "products"
+      "table": "votes"
     },
     {
       "columns": [
@@ -266,6 +319,27 @@
       "schema": "public",
       "table": "products",
       "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "votes_pkey",
+      "schema": "public",
+      "table": "votes",
+      "entityType": "pks"
+    },
+    {
+      "nameExplicit": false,
+      "columns": [
+        "slug"
+      ],
+      "nullsNotDistinct": false,
+      "name": "products_slug_key",
+      "schema": "public",
+      "table": "products",
+      "entityType": "uniques"
     }
   ],
   "renames": []

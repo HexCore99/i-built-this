@@ -8,8 +8,8 @@ export default function Home() {
   return (
     <div>
       <HeroSection />
-      <FeaturedProducts />
       <Suspense fallback={<ProductSkeleton />}>
+        <FeaturedProducts />
         <RecentlyLaunchedProducts />
       </Suspense>
     </div>
