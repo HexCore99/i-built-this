@@ -78,6 +78,7 @@ export async function addProductAction(
       organizationId: orgId,
       userId,
     });
+    revalidatePath("/admin");
 
     return {
       success: true,

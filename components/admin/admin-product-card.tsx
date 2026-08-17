@@ -11,6 +11,8 @@ export default function AdminProductCard({
 }: {
   product: ProductType;
 }) {
+  console.log(product);
+
   return (
     <Card className="border rounded-lg p-6 bg-background hover:shadow-md transition-shadow">
       <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
