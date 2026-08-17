@@ -12,11 +12,11 @@ import { auth } from "@clerk/nextjs/server";
 export default async function FeaturedProducts({}) {
   const { userId } = await auth();
   const featuredProducts = await getFeaturedProducts();
+  const featuredProductsIds = featuredProducts.map((product) => product.id);
+
   let voteInformation = null;
   if (userId) {
-    voteInformation = await getVoteInformation(userId);
-    console.log("===================================================");
-    console.log(voteInformation);
+    voteInformation = await getVoteInformation(userId, featuredProductsIds);
   }
 
   return (

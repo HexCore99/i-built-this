@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import { products, votes } from "@/db/schema";
-import { desc, eq } from "drizzle-orm";
+import { ProductType } from "@/types";
+import { desc, eq, and, inArray } from "drizzle-orm";
 import { connection } from "next/server";
 import { resolve } from "node:dns";
 
@@ -46,12 +47,11 @@ export async function getRecentlyLaunchedProducts() {
   );
 }
 
-export async function getVoteInformation(userId: string) {
-  // await connection(); //TODO: do i need connection here?
-  const voteInformation = db
+export async function getVoteInformation(userId: string, productIds: number[]) {
+  if (productIds.length === 0) return [];
+
+  return db
     .select()
     .from(votes)
-    .where(eq(votes.userId, userId));
-
-  return voteInformation;
+    .where(and(eq(votes.userId, userId), inArray(votes.productId, productIds)));
 }

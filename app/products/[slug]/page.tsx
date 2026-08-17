@@ -3,7 +3,11 @@ import VotingButtons from "@/components/products/voting-buttons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getProductBySlug } from "@/lib/products/product-actions";
-import { getFeaturedProducts } from "@/lib/products/product-select";
+import {
+  getFeaturedProducts,
+  getVoteInformation,
+} from "@/lib/products/product-select";
+import { auth } from "@clerk/nextjs/server";
 import {
   ArrowLeftIcon,
   CalendarIcon,
@@ -21,7 +25,9 @@ export default function ProductPage({
   params: Promise<{ slug: string }>;
 }) {
   return (
-    <Suspense fallback={<div className="wrapper py-16">Loading product...</div>}>
+    <Suspense
+      fallback={<div className="wrapper py-16">Loading product...</div>}
+    >
       <ProductContent params={params} />
     </Suspense>
   );
@@ -38,6 +44,11 @@ async function ProductContent({
   if (!product) {
     notFound();
   }
+  const { userId } = await auth();
+
+  const [userVoteInfo] = userId
+    ? await getVoteInformation(userId, [product.id])
+    : [];
 
   const { name, description, websiteUrl, tags, voteCount, tagline } = product;
   return (
@@ -111,7 +122,12 @@ async function ProductContent({
                   <p className="text-sm text-muted-foreground mb-2">
                     Support this product
                   </p>
-                  <VotingButtons productId={product.id} voteCount={voteCount} />
+                  <VotingButtons
+                    productId={product.id}
+                    voteCount={voteCount}
+                    userId={userId}
+                    userVoteInfo={userVoteInfo}
+                  />
                 </div>
                 {voteCount > 100 && (
                   <div className="pt-6 border-t">
