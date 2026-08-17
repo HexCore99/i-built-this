@@ -3,13 +3,17 @@ import { ClockIcon, SearchIcon, TrendingUpIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import ProductCard from "./product-card";
-import { ProductType } from "../../types/index";
-import { useEffect, useMemo, useState } from "react";
+import { ProductType, VoteInformation } from "@/types";
+import { useMemo, useState } from "react";
 
 export default function ProductExplorer({
   products,
+  userId,
+  voteInformation,
 }: {
   products: ProductType[];
+  userId: string | null;
+  voteInformation: VoteInformation[];
 }) {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [sortBy, setSortBy] = useState<"trending" | "recent" | "newest">(
@@ -84,9 +88,20 @@ export default function ProductExplorer({
         </p>
       </div>
       <div className="grid-wrapper">
-        {filteredProducts.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
+        {filteredProducts.map((product) => {
+          const userVoteInfo = voteInformation.find(
+            (vote) => vote.productId === product.id,
+          );
+
+          return (
+            <ProductCard
+              key={product.id}
+              product={product}
+              userId={userId}
+              userVoteInfo={userVoteInfo}
+            />
+          );
+        })}
       </div>
     </div>
   );

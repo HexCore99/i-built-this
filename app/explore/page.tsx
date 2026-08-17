@@ -1,11 +1,15 @@
-"use cache";
 import SectionHeader from "@/components/common/section-header";
 import ProductExplorer from "@/components/products/product-explorer";
-import { getApprovedProducts } from "@/lib/products/product-select";
+import ProductSkeleton from "@/components/products/product-skeleton";
+import {
+  getApprovedProducts,
+  getVoteInformation,
+} from "@/lib/products/product-select";
+import { auth } from "@clerk/nextjs/server";
 import { CompassIcon } from "lucide-react";
+import { Suspense } from "react";
 
-export default async function ExplorePage() {
-  const products = await getApprovedProducts();
+export default function ExplorePage() {
   return (
     <div className="py-20">
       <div className="wrapper">
@@ -16,8 +20,29 @@ export default async function ExplorePage() {
             description="Browse and discover amazing projects from our community"
           />
         </div>
-        <ProductExplorer products={products} />
+        <Suspense fallback={<ProductSkeleton />}>
+          <ExploreProducts />
+        </Suspense>
       </div>
     </div>
+  );
+}
+
+async function ExploreProducts() {
+  const products = await getApprovedProducts();
+  const { userId } = await auth();
+  const voteInformation = userId
+    ? await getVoteInformation(
+        userId,
+        products.map((product) => product.id),
+      )
+    : [];
+
+  return (
+    <ProductExplorer
+      products={products}
+      userId={userId}
+      voteInformation={voteInformation}
+    />
   );
 }
